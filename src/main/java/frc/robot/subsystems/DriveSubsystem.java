@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ctre.phoenix.unmanaged.Unmanaged;
+import com.ctre.phoenixpro.configs.Pigeon2Configuration;
 // import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenixpro.hardware.Pigeon2;
 
@@ -122,7 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
 
-    m_gyro.reset();
+    initPigeon();
 
     resetModuleEncoders();
 
@@ -176,6 +177,43 @@ public class DriveSubsystem extends SubsystemBase {
     for (SwerveModuleSparkMax module : ModuleMap.orderedValuesList(m_swerveModules))
       module.setDesiredState(moduleStates.get(module.getModulePosition()), isOpenLoop);
   }
+
+
+  private void initPigeon() {
+    // Factory default the Pigeon.
+    var toApply = new Pigeon2Configuration();
+    // var mountPose = toApply.MountPose;
+    toApply.MountPose.MountPosePitch = 0;
+    // toApply.MountPose.MountPoseRoll = 0;
+    toApply.MountPose.MountPoseYaw = -90;
+    /*
+     * User can change the configs if they want, or leave it empty for
+     * factory-default
+     */
+
+     m_gyro.reset();
+     
+     m_gyro.getConfigurator().apply(toApply);
+    // Add runtime adjustments to Pigeon configuration below this line.
+    // _wpiPigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
+
+    // used by pro still thinking about it
+    // _pigeon2.getConfigurator().apply(toApply);
+
+    /* Speed up signals to an appropriate rate */
+    // _pigeon2.getYaw().setUpdateFrequency(100);
+    // _pigeon2.getPitch().setUpdateFrequency(100);
+    // _pigeon.reset();
+
+    m_gyro.getPitch().setUpdateFrequency(1000);
+    m_gyro.setYaw(0, .1);
+
+    m_gyro.getYaw().setUpdateFrequency(100);
+    m_gyro.getYaw().waitForUpdate(.1);
+
+    // _pigeon2.setStatusFramePeriod(0,100 )
+    // _pigeon2.getGravityVectorZ().setUpdateFrequency(100);
+}
 
   @Override
   public void periodic() {
