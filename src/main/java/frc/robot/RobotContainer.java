@@ -66,15 +66,15 @@ public class RobotContainer {
         // new SetSwerveDrive(
         // m_robotDrive,
 
-        // () -> -m_coDriverController.getRawAxis(1),
+        // () -> -m_coDriverController.getRawAxis(),
         // () -> -m_coDriverController.getRawAxis(0),
         // () -> -m_coDriverController.getRawAxis(4)));
         m_robotDrive.setDefaultCommand(
         new SetSwerveDrive(
             m_robotDrive,
-            () -> leftJoystick.getRawAxis(1),
-            () -> leftJoystick.getRawAxis(0),
-            () -> leftJoystick.getRawAxis(2)));
+            () -> leftJoystick.getRawAxis(XboxController.Axis.kLeftY.value),
+            () -> leftJoystick.getRawAxis(XboxController.Axis.kLeftX.value),
+            () -> leftJoystick.getRawAxis(XboxController.Axis.kRightX.value)));
 
     // driver.leftTrigger.whileHeld(new JogTurnModule(
     //     m_robotDrive,
