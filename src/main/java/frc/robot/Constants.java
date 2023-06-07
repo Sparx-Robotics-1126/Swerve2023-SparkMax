@@ -31,7 +31,7 @@ public final class Constants {
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 10;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 11;
     public static final int FRONT_LEFT_MODULE_STEER_CANCODER = 12;
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET =210.322;// -Math.toRadians(0.0);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET =30.322;// -Math.toRadians(0.0);
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 20;
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 21;
@@ -41,7 +41,7 @@ public final class Constants {
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 40;
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 41;
     public static final int BACK_LEFT_MODULE_STEER_CANCODER = 42;
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = 318.691;//-Math.toRadians(0.0);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = 138.691;//-Math.toRadians(0.0);
 
     public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 30;
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 31;
