@@ -25,6 +25,10 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  public Robot() {
+    super(0.03);
+  }
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -111,6 +115,7 @@ SmartDashboard.putStringArray("g", g);
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    m_robotContainer.resetPigeon();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

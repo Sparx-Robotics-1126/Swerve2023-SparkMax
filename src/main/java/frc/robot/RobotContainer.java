@@ -127,6 +127,10 @@ public class RobotContainer {
 
   }
 
+  public void resetPigeon(){
+    m_robotDrive.resetPigeon();
+  }
+
   public void simulationPeriodic() {
     m_fieldSim.periodic();
     periodic();

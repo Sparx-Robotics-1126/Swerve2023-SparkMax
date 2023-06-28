@@ -129,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     setIdleMode(true);
 
-    m_fieldOriented=false;
+    m_fieldOriented=true;
 
     if (RobotBase.isSimulation()) {
 
@@ -178,6 +178,10 @@ public class DriveSubsystem extends SubsystemBase {
       module.setDesiredState(moduleStates.get(module.getModulePosition()), isOpenLoop);
   }
 
+
+  public void resetPigeon(){
+    m_gyro.reset();
+  }
 
   private void initPigeon() {
     // Factory default the Pigeon.
