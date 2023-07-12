@@ -28,6 +28,7 @@ import frc.robot.utils.ModuleMap;
 public final class Constants {
 
   public static final class LEDConstants{
+//    public static boolean ENABLED = true;
     public static final int CANdle = 3;
     public static final double BRIGHTNESS_SCALAR = 0.5;
     public static final int JoystickId = 1;

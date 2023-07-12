@@ -68,7 +68,9 @@ public class RobotContainer {
                     () -> m_driveController.getLeftX(),
                     () -> m_driveController.getRightX()));
 
-    configureOperatorButtonBindings();
+    if(m_candleSubsystem != null) {
+      configureOperatorButtonBindings();
+    }
 //        m_robotDrive.setDefaultCommand(
 //        new SetSwerveDrive(
 //            m_robotDrive,

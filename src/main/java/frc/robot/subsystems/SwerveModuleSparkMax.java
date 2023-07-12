@@ -96,15 +96,15 @@ public class SwerveModuleSparkMax extends SubsystemBase {
   private double turnDeadband = .5;
 
   /**
-   * Constructs a SwerveModule.
-   *
-   * @param driveMotorChannel       The channel of the drive motor.
-   * @param turningMotorChannel     The channel of the turning motor.
-   * @param driveEncoderChannels    The channels of the drive encoder.
-   * @param turningCANCoderChannels The channels of the turning encoder.
-   * @param driveEncoderReversed    Whether the drive encoder is reversed.
-   * @param turningEncoderReversed  Whether the turning encoder is reversed.
-   * @param turningEncoderOffset
+//   * Constructs a SwerveModule.
+//   *
+//   * @param driveMotorChannel       The channel of the drive motor.
+//   * @param turningMotorChannel     The channel of the turning motor.
+//   * @param driveEncoderChannels    The channels of the drive encoder.
+//   * @param turningCANCoderChannels The channels of the turning encoder.
+//   * @param driveEncoderReversed    Whether the drive encoder is reversed.
+//   * @param turningEncoderReversed  Whether the turning encoder is reversed.
+//   * @param turningEncoderOffset
    */
   public SwerveModuleSparkMax(
       ModulePosition modulePosition,
@@ -162,21 +162,14 @@ public class SwerveModuleSparkMax extends SubsystemBase {
     m_driveVelController = m_driveMotor.getPIDController();
 
     if (RobotBase.isReal()) {
-
       m_driveVelController.setP(.01, VEL_SLOT);
-
       m_driveVelController.setD(0, VEL_SLOT);
-
       m_driveVelController.setI(0, VEL_SLOT);
-
       m_driveVelController.setIZone(1, VEL_SLOT);
-
     }
 
     else {
-
       m_driveVelController.setP(1, SIM_SLOT);
-
     }
 
     m_turningEncoder = m_turningMotor.getEncoder();
@@ -185,30 +178,25 @@ public class SwerveModuleSparkMax extends SubsystemBase {
 
     m_turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningDegreesPerEncRev / 60);
 
-    if (!useRRPid)
-
+    if (!useRRPid) {
       m_turnSMController = m_turningMotor.getPIDController();
-
-    else
-
+    }
+    else {
       m_turnController = new PIDController(ModuleConstants.kPModuleTurnController, 0, 0);
+    }
 
-    if (useRRPid)
-
+    if (useRRPid) {
       tunePosGains();
-
-    else
-
+    }
+    else {
       tuneSMPosGains();
-
+    }
     m_modulePosition = modulePosition;
 
     m_moduleNumber = m_modulePosition.ordinal();// gets module enum index
 
     if (RobotBase.isSimulation()) {
-
       REVPhysicsSim.getInstance().addSparkMax(m_driveMotor, DCMotor.getNEO(1));
-
     }
 
     checkCAN();
@@ -226,21 +214,17 @@ public class SwerveModuleSparkMax extends SubsystemBase {
   public void periodic() {
 
     if (Pref.getPref("SwerveTune") == 1 && tuneOn == 0) {
-
       tuneOn = 1;
 
-      if (useRRPid)
-
+      if (useRRPid) {
         tunePosGains();
-
-      else
-
+      }
+      else {
         tuneSMPosGains();
-
+      }
     }
 
     if (tuneOn == 1) {
-
       tuneOn = (int) Pref.getPref("SwerveTune");
     }
 
@@ -316,31 +300,22 @@ public class SwerveModuleSparkMax extends SubsystemBase {
     m_lastAngle = angle;
 
     if (RobotBase.isReal()) {
-
       // turn axis
-
       actualAngleDegrees = m_turningEncoder.getPosition();
 
       if (useRRPid) {
-
         positionTurn(angle);
       }
-
       else {
-
         positionSMTurn(angle);
       }
 
       // drive axis
-
-      if (isOpenLoop)
-
+      if (isOpenLoop) {
         m_driveMotor.set(state.speedMetersPerSecond / ModuleConstants.kFreeMetersPerSecond);
-
+      }
       else {
-
         m_driveVelController.setReference(state.speedMetersPerSecond, ControlType.kVelocity, VEL_SLOT);
-
       }
     }
 
@@ -350,10 +325,8 @@ public class SwerveModuleSparkMax extends SubsystemBase {
 
       // no simulation for angle - angle command is returned directly to drive
       // subsystem as actual angle in 2 places - getState() and getHeading
-
       simTurnPosition(angle);
     }
-
   }
 
   public static double limitMotorCmd(double motorCmdIn) {
@@ -364,19 +337,16 @@ public class SwerveModuleSparkMax extends SubsystemBase {
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
     m_turningEncoder.setPosition(0);
-
   }
 
   public double getHeadingDegrees() {
 
-    if (RobotBase.isReal())
-
+    if (RobotBase.isReal()) {
       return m_turningEncoder.getPosition();
-
-    else
-
+    }
+    else {
       return actualAngleDegrees;
-
+    }
   }
 
   public Rotation2d getHeadingRotation2d() {
@@ -388,17 +358,21 @@ public class SwerveModuleSparkMax extends SubsystemBase {
   }
 
   public void setDriveBrakeMode(boolean on) {
-    if (on)
+    if (on) {
       m_driveMotor.setIdleMode(IdleMode.kBrake);
-    else
+    }
+      else {
       m_driveMotor.setIdleMode(IdleMode.kCoast);
+    }
   }
 
   public void setTurnBrakeMode(boolean on) {
-    if (on)
+    if (on) {
       m_turningMotor.setIdleMode(IdleMode.kBrake);
-    else
+    }
+    else {
       m_turningMotor.setIdleMode(IdleMode.kCoast);
+    }
   }
 
   public void resetAngleToAbsolute() {
@@ -425,12 +399,9 @@ public class SwerveModuleSparkMax extends SubsystemBase {
 
     double pidOut = m_turnController.calculate(m_turningEncoder.getPosition(), angle);
     // if robot is not moving, stop the turn motor oscillating
-    if (turnAngleError < turnDeadband
-
-        && Math.abs(state.speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01))
-
+    if (turnAngleError < turnDeadband && Math.abs(state.speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01)) {
       pidOut = 0;
-
+    }
     m_turningMotor.setVoltage(pidOut * RobotController.getBatteryVoltage());
 
   }
@@ -438,20 +409,14 @@ public class SwerveModuleSparkMax extends SubsystemBase {
   private void simTurnPosition(double angle) {
     
     if (angle != actualAngleDegrees && angleIncrementPer20ms == 0) {
-
       angleDifference = angle - actualAngleDegrees;
-
       angleIncrementPer20ms = angleDifference / 20;// 10*20ms = .2 sec move time
     }
 
     if (angleIncrementPer20ms != 0) {
-
       actualAngleDegrees += angleIncrementPer20ms;
-
       if ((Math.abs(angle - actualAngleDegrees)) < .1) {
-
         actualAngleDegrees = angle;
-
         angleIncrementPer20ms = 0;
       }
     }
@@ -501,7 +466,6 @@ public class SwerveModuleSparkMax extends SubsystemBase {
     turnCoderConnected = m_turnCANcoder.getFirmwareVersion() > 0;
 
     return driveMotorConnected && turnMotorConnected && turnCoderConnected;
-
   }
 
 }
