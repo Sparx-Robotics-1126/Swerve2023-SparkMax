@@ -141,15 +141,15 @@ public class DriveSubsystem extends SubsystemBase {
     ShuffleboardContent.initMisc(this);
   }
 
-  /**
-   * Method to drive the robot using joystick info.
-   *
-   * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the y direction (sideways).
-   * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the
-   *                      field.
-   */
+//  /**
+//   * Method to drive the robot using joystick info.
+//   *
+//   * @param xSpeed        Speed of the robot in the x direction (forward).
+//   * @param ySpeed        Speed of the robot in the y direction (sideways).
+//   * @param rot           Angular rate of the robot.
+//   * @param fieldRelative Whether the provided x and y speeds are relative to the
+//   *                      field.
+//   */
   @SuppressWarnings("ParameterName")
 
   // move the robot from gamepad
@@ -289,11 +289,11 @@ public class DriveSubsystem extends SubsystemBase {
     return map;
   }
 
-  /**
-   * Sets the swerve ModuleStates.
-   *
-   * @param desiredStates The desired SwerveModule states.
-   */
+//  /**
+//   * Sets the swerve ModuleStates.
+//   *
+//   * @param desiredStates The desired SwerveModule states.
+//   */
   public void setSwerveModuleStates(SwerveModuleState[] states, boolean isOpenLoop) {
     SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kMaxSpeedMetersPerSecond);
 

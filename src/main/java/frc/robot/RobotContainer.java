@@ -12,17 +12,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.DriveConstants.ModulePosition;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ToggleFieldOriented;
 // import frc.robot.commands.auto.DriveForward;
 // import frc.robot.commands.auto.FiveBallAuto;
-import frc.robot.commands.swerve.JogDriveModule;
-import frc.robot.commands.swerve.JogTurnModule;
-import frc.robot.commands.swerve.PositionTurnModule;
+import frc.robot.commands.LED.CANdleConfigCommands;
+import frc.robot.commands.LED.CANdlePrintCommands;
 import frc.robot.commands.swerve.SetSwerveDrive;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -39,12 +38,15 @@ public class RobotContainer {
   private final SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
 
   // The driver's controller
+  private final XboxController m_driveController = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 
+  private final LEDSubsystem m_candleSubsystem = new LEDSubsystem(m_operatorController);
   static Joystick leftJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
-  private XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
+//  private XboxController m_coDriverController = new XboxController(OIConstants.kOperatorControllerPort);
 
-  final GamepadButtons driver = new GamepadButtons(m_coDriverController, true);
+//  final GamepadButtons driver = new GamepadButtons(m_coDriverController, true);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -58,65 +60,40 @@ public class RobotContainer {
 
     m_fieldSim.initSim();
     initializeAutoChooser();
-    // sc.showAll();
-    // Configure default commands
-   // m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        // new SetSwerveDrive(
-        // m_robotDrive,
 
-        // () -> -m_coDriverController.getRawAxis(),
-        // () -> -m_coDriverController.getRawAxis(0),
-        // () -> -m_coDriverController.getRawAxis(4)));
-        m_robotDrive.setDefaultCommand(
-        new SetSwerveDrive(
-            m_robotDrive,
-            () -> leftJoystick.getRawAxis(XboxController.Axis.kLeftY.value),
-            () -> leftJoystick.getRawAxis(XboxController.Axis.kLeftX.value),
-            () -> leftJoystick.getRawAxis(XboxController.Axis.kRightX.value)));
+    m_robotDrive.setDefaultCommand(
+            new SetSwerveDrive(
+                    m_robotDrive,
+                    () -> m_driveController.getLeftY(),
+                    () -> m_driveController.getLeftX(),
+                    () -> m_driveController.getRightX()));
 
-    // driver.leftTrigger.whileHeld(new JogTurnModule(
-    //     m_robotDrive,
-    //     () -> -m_coDriverController.getRawAxis(1),
-    //     () -> m_coDriverController.getRawAxis(0),
-    //     () -> m_coDriverController.getRawAxis(2),
-    //     () -> m_coDriverController.getRawAxis(3)));
-
-    // // individual modules
-    // driver.leftBumper.whileHeld(new JogDriveModule(
-    //     m_robotDrive,
-    //     () -> -m_coDriverController.getRawAxis(1),
-    //     () -> m_coDriverController.getRawAxis(0),
-    //     () -> m_coDriverController.getRawAxis(2),
-    //     () -> m_coDriverController.getRawAxis(3),
-    //     true));
-
-    // // all modules
-    // driver.rightBumper.whileHeld(new JogDriveModule(
-    //     m_robotDrive,
-    //     () -> -m_coDriverController.getRawAxis(1),
-    //     () -> m_coDriverController.getRawAxis(0),
-    //     () -> m_coDriverController.getRawAxis(2),
-    //     () -> m_coDriverController.getRawAxis(3),
-    //     false));
-
-
-        JoystickButton button_8 = new JoystickButton(leftJoystick,8);
-        JoystickButton button_7 = new JoystickButton(leftJoystick, 7);       
-
-        // button_8.whenPressed(new ToggleFieldOriented(m_robotDrive));
-    // position turn modules individually
-    // driver.X_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.FRONT_LEFT));
-    // driver.A_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.FRONT_RIGHT));
-    // driver.B_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.BACK_LEFT));
-    // driver.Y_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.BACK_RIGHT));
+    configureOperatorButtonBindings();
+//        m_robotDrive.setDefaultCommand(
+//        new SetSwerveDrive(
+//            m_robotDrive,
+//            () -> leftJoystick.getRawAxis(XboxController.Axis.kLeftY.value),
+//            () -> leftJoystick.getRawAxis(XboxController.Axis.kLeftX.value),
+//            () -> leftJoystick.getRawAxis(XboxController.Axis.kRightX.value)));
 
   }
+
+
+  private void configureOperatorButtonBindings() {
+    new JoystickButton(m_operatorController, Constants.LEDConstants.BlockButton).whenPressed(m_candleSubsystem::setColors, m_candleSubsystem);
+    new JoystickButton(m_operatorController, Constants.LEDConstants.IncrementAnimButton).whenPressed(m_candleSubsystem::incrementAnimation, m_candleSubsystem);
+    new JoystickButton(m_operatorController, Constants.LEDConstants.DecrementAnimButton).whenPressed(m_candleSubsystem::decrementAnimation, m_candleSubsystem);
+
+    new POVButton(m_operatorController, Constants.LEDConstants.MaxBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 1.0));
+    new POVButton(m_operatorController, Constants.LEDConstants.MidBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0.3));
+    new POVButton(m_operatorController, Constants.LEDConstants.ZeroBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0));
+
+    new JoystickButton(m_operatorController, Constants.LEDConstants.VbatButton).whenPressed(new CANdlePrintCommands.PrintVBat(m_candleSubsystem));
+    new JoystickButton(m_operatorController, Constants.LEDConstants.V5Button).whenPressed(new CANdlePrintCommands.Print5V(m_candleSubsystem));
+    new JoystickButton(m_operatorController, Constants.LEDConstants.CurrentButton).whenPressed(new CANdlePrintCommands.PrintCurrent(m_candleSubsystem));
+    new JoystickButton(m_operatorController, Constants.LEDConstants.TemperatureButton).whenPressed(new CANdlePrintCommands.PrintTemperature(m_candleSubsystem));
+  }
+
 
   private void initializeAutoChooser() {
     m_autoChooser.setDefaultOption("Do Nothing", new WaitCommand(0));

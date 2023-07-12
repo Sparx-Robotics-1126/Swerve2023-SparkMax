@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utils.ModuleMap;
 
 /**
@@ -25,6 +26,24 @@ import frc.robot.utils.ModuleMap;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final class LEDConstants{
+    public static final int CANdle = 3;
+    public static final double BRIGHTNESS_SCALAR = 0.5;
+    public static final int JoystickId = 1;
+    public static final int IncrementAnimButton = XboxController.Button.kRightBumper.value;
+    public static final int DecrementAnimButton = XboxController.Button.kLeftBumper.value;
+    public static final int BlockButton = XboxController.Button.kStart.value;
+    public static final int MaxBrightnessAngle = 90;
+    public static final int MidBrightnessAngle = 180;
+    public static final int ZeroBrightnessAngle = 270;
+    public static final int VbatButton = XboxController.Button.kA.value;
+    public static final int V5Button = XboxController.Button.kB.value;
+    public static final int CurrentButton = XboxController.Button.kX.value;
+    public static final int TemperatureButton = XboxController.Button.kY.value;
+
+  }
+
 
   public static final class CanConstants {
 
@@ -184,7 +203,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kCoDriverControllerPort = 1;
+    public static final int kOperatorControllerPort = 1;
  
   }
 
