@@ -1,0 +1,93 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 2.12,
+        "y": 4.13
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.6741519560660922,
+        "y": 4.695201854895866
+      },
+      "holonomicAngle": -3.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.98,
+        "y": 3.88
+      },
+      "prevControl": {
+        "x": 6.4983026284962575,
+        "y": 4.31495729498478
+      },
+      "nextControl": {
+        "x": 6.4983026284962575,
+        "y": 4.31495729498478
+      },
+      "holonomicAngle": 135.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.42,
+        "y": 5.23
+      },
+      "prevControl": {
+        "x": 5.056146767097806,
+        "y": 5.306133886289125
+      },
+      "nextControl": null,
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.5,
+      "names": [
+        "GroundIntakeOut and Fast PickUp"
+      ]
+    },
+    {
+      "position": 1.09,
+      "names": [
+        "ShootPosL3"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "ShootToL2"
+      ]
+    }
+  ]
+}

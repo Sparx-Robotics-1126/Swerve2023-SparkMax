@@ -1,0 +1,118 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 2.12,
+        "y": 3.88
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.888784902260143,
+        "y": 4.93008064463693
+      },
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.99,
+        "y": 3.88
+      },
+      "prevControl": {
+        "x": 6.99,
+        "y": 4.704780994481341
+      },
+      "nextControl": {
+        "x": 6.99,
+        "y": 3.6685843791843396
+      },
+      "holonomicAngle": 90.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.99,
+        "y": 3.58
+      },
+      "prevControl": {
+        "x": 6.99,
+        "y": 3.8647365309272583
+      },
+      "nextControl": {
+        "x": 6.99,
+        "y": 3.8647365309272583
+      },
+      "holonomicAngle": 90.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.12,
+        "y": 4.48
+      },
+      "prevControl": {
+        "x": 3.0595168704788276,
+        "y": 5.339837368361774
+      },
+      "nextControl": null,
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.1,
+      "names": [
+        "GroundIntakeOut and PickUp"
+      ]
+    },
+    {
+      "position": 2.0909090909091246,
+      "names": [
+        "ShootPosL3"
+      ]
+    },
+    {
+      "position": 3.0,
+      "names": [
+        "Shoot"
+      ]
+    }
+  ]
+}

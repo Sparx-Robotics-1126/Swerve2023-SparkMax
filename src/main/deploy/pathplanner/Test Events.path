@@ -1,0 +1,122 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 2.06,
+        "y": 3.85
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0676968924835473,
+        "y": 3.85
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": true,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "Intake PickUp",
+          "Arm LVLTRE"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 5.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.73,
+        "y": 3.85
+      },
+      "prevControl": {
+        "x": 1.7290954634721751,
+        "y": 3.85
+      },
+      "nextControl": {
+        "x": 2.117973233003343,
+        "y": 3.85
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": true,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "Intake Reverse"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 5.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.0587098317408823,
+        "y": 3.851099976223574
+      },
+      "prevControl": {
+        "x": 2.057309108445209,
+        "y": 3.851099976223574
+      },
+      "nextControl": {
+        "x": 2.0600268240302237,
+        "y": 3.851099976223574
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": true,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "Arm HOME"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.73,
+        "y": 3.85
+      },
+      "prevControl": {
+        "x": 3.71885185703946,
+        "y": 3.85
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "AutoLevel"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 2.6836363636363783,
+      "names": [
+        "LED Cycle"
+      ]
+    },
+    {
+      "position": 2.5,
+      "names": [
+        "Arm HOME",
+        "IntakeOff"
+      ]
+    }
+  ]
+}

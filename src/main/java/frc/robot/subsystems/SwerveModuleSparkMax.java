@@ -277,6 +277,11 @@ public class SwerveModuleSparkMax extends SubsystemBase {
   public SwerveModulePosition getPosition(){
     return new SwerveModulePosition(getDrivePosition(),getHeadingRotation2d());
   }
+
+
+  public void setDesiredState(SwerveModuleState desiredState) {
+    setDesiredState( desiredState,  false);
+  }
   /**
    * Sets the desired state for the module.
    *

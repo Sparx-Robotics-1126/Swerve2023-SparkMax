@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.ModuleMap;
 
 /**
@@ -68,10 +70,53 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_CANCODER = 32;
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = 193.008;//-Math.toRadians(-105);
 
+    public static final int PIGEON_ID = 4;
+
+  }
+
+  public static final class PathConstants{
+    public static final double kpXdefault = 1.5;
+    public static final double kiXdefault = 0.0;
+    public static final double kdXdefault = 0.0;
+
+    public static final double kpYdefault = 3.0;
+    public static final double kiYdefault = 0.0;
+    public static final double kdYdefault = 0.0;
+
+    public static final double kpRdefault = 5.0;
+    public static final double kiRdefault = 0.0;
+    public static final double kdRdefault = 0.0;
+
+    public static final int LVL = 0;
+    public static final int NoLVL = 1;
+    public static final int grabCube = 2;
+
+  }
+
+  public static final class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+    public static final double kLevelTolerance = 2.25;  //field tolerance is 2.25 degrees
+
+    public static final double kDriveAngle = -11;  // Was 14.0
+
+    public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
   }
 
   public static final class DriveConstants {
 
+    public static final double kAutoLevelMaxOutput = 0.30;
     public static final boolean kFrontLeftTurningMotorReversed = true;
     public static final boolean kBackLeftTurningMotorReversed = true;
     public static final boolean kFrontRightTurningMotorReversed = true;

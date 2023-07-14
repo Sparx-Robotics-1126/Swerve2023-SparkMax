@@ -22,6 +22,7 @@ import frc.robot.commands.swerve.SetSwerveDrive;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.PigeonSubsystem;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -31,6 +32,7 @@ import frc.robot.subsystems.LEDSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems
+  private final PigeonSubsystem m_pigeon;
   final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
   public final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
@@ -55,6 +57,7 @@ public class RobotContainer {
     // Preferences.removeAll();
     Pref.deleteUnused();
     Pref.addMissing();
+    m_pigeon = PigeonSubsystem.getInstance();
     SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
     // Configure the button bindings
 

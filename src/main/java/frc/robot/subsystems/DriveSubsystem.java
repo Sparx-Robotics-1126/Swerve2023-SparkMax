@@ -12,8 +12,11 @@ import com.ctre.phoenixpro.configs.Pigeon2Configuration;
 // import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenixpro.hardware.Pigeon2;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -28,13 +31,18 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CanConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PathConstants;
 import frc.robot.Constants.DriveConstants.ModulePosition;
 import frc.robot.utils.ModuleMap;
 import frc.robot.utils.ShuffleboardContent;
@@ -86,10 +94,13 @@ public class DriveSubsystem extends SubsystemBase {
               CanConstants.BACK_RIGHT_MODULE_STEER_OFFSET)));
   // The gyro sensor
 
-  private final Pigeon2 m_gyro = new Pigeon2(4);
+  private final PigeonSubsystem m_gyro = PigeonSubsystem.getInstance();
 
   private PIDController m_xController = new PIDController(DriveConstants.kP_X, 0, DriveConstants.kD_X);
   private PIDController m_yController = new PIDController(DriveConstants.kP_Y, 0, DriveConstants.kD_Y);
+
+  private final PIDController m_pitchPidController = new PIDController(0.0055, 0.00008, 0.0007);
+
   private ProfiledPIDController m_turnController = new ProfiledPIDController(
       DriveConstants.kP_Theta, 0,
       DriveConstants.kD_Theta,
@@ -110,6 +121,19 @@ public class DriveSubsystem extends SubsystemBase {
 
   private boolean showOnShuffleboard = true;
 
+  // followTrajectoryCommand PID variables
+  private double m_kpX;
+  private double m_kiX;
+  private double m_kdX;
+
+  private double m_kpY;
+  private double m_kiY;
+  private double m_kdY;
+
+  private double m_kpR;
+  private double m_kiR;
+  private double m_kdR;
+  private int count = 0;
   private SimDouble m_simAngle;// navx sim
 
   private double m_simYaw;
@@ -123,7 +147,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
 
-    initPigeon();
+//    initPigeon();
 
     resetModuleEncoders();
 
@@ -183,47 +207,47 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
-  private void initPigeon() {
-    // Factory default the Pigeon.
-    var toApply = new Pigeon2Configuration();
-    // var mountPose = toApply.MountPose;
-    toApply.MountPose.MountPosePitch = 0;
-    // toApply.MountPose.MountPoseRoll = 0;
-    toApply.MountPose.MountPoseYaw = -90;
-    /*
-     * User can change the configs if they want, or leave it empty for
-     * factory-default
-     */
-
-     m_gyro.reset();
-     
-     m_gyro.getConfigurator().apply(toApply);
-    // Add runtime adjustments to Pigeon configuration below this line.
-    // _wpiPigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
-
-    // used by pro still thinking about it
-    // _pigeon2.getConfigurator().apply(toApply);
-
-    /* Speed up signals to an appropriate rate */
-    // _pigeon2.getYaw().setUpdateFrequency(100);
-    // _pigeon2.getPitch().setUpdateFrequency(100);
-    // _pigeon.reset();
-
-    m_gyro.getPitch().setUpdateFrequency(1000);
-    m_gyro.setYaw(0, .1);
-
-    m_gyro.getYaw().setUpdateFrequency(100);
-    m_gyro.getYaw().waitForUpdate(.1);
-
-    // _pigeon2.setStatusFramePeriod(0,100 )
-    // _pigeon2.getGravityVectorZ().setUpdateFrequency(100);
-}
+//  private void initPigeon() {
+//    // Factory default the Pigeon.
+//    var toApply = new Pigeon2Configuration();
+//    // var mountPose = toApply.MountPose;
+//    toApply.MountPose.MountPosePitch = 0;
+//    // toApply.MountPose.MountPoseRoll = 0;
+//    toApply.MountPose.MountPoseYaw = -90;
+//    /*
+//     * User can change the configs if they want, or leave it empty for
+//     * factory-default
+//     */
+//
+////     m_gyro.reset();
+//
+////     m_gyro.getConfigurator().apply(toApply);
+//    // Add runtime adjustments to Pigeon configuration below this line.
+//    // _wpiPigeon.configMountPose(AxisDirection.PositiveY, AxisDirection.PositiveZ);
+//
+//    // used by pro still thinking about it
+//    // _pigeon2.getConfigurator().apply(toApply);
+//
+//    /* Speed up signals to an appropriate rate */
+//    // _pigeon2.getYaw().setUpdateFrequency(100);
+//    // _pigeon2.getPitch().setUpdateFrequency(100);
+//    // _pigeon.reset();
+//
+//    m_gyro.getPitch().setUpdateFrequency(1000);
+//    m_gyro.setYaw(0, .1);
+//
+//    m_gyro.getYaw().setUpdateFrequency(100);
+//    m_gyro.getYaw().waitForUpdate(.1);
+//
+//    // _pigeon2.setStatusFramePeriod(0,100 )
+//    // _pigeon2.getGravityVectorZ().setUpdateFrequency(100);
+//}
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     updateOdometry();
-    SmartDashboard.putNumber("Yaw",-m_gyro.getYaw().getValue());
+    SmartDashboard.putNumber("Yaw",-m_gyro.getYaw());
 
   }
 
@@ -254,6 +278,18 @@ public class DriveSubsystem extends SubsystemBase {
 
   public SwerveDrivePoseEstimator getOdometry() {
     return m_odometry;
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(
+            Rotation2d.fromDegrees(-m_gyro.getAngle()),
+            new SwerveModulePosition[] {
+                    m_swerveModules.get(ModulePosition.FRONT_LEFT).getPosition(),
+                    m_swerveModules.get(ModulePosition.FRONT_RIGHT).getPosition(),
+                    m_swerveModules.get(ModulePosition.BACK_LEFT).getPosition(),
+                    m_swerveModules.get(ModulePosition.BACK_RIGHT).getPosition()
+            },
+            pose);
   }
 
   public void setOdometry(Pose2d pose) {
@@ -300,7 +336,16 @@ public class DriveSubsystem extends SubsystemBase {
     for (SwerveModuleSparkMax module : ModuleMap.orderedValuesList(m_swerveModules))
       module.setDesiredState(states[module.getModulePosition().ordinal()], isOpenLoop);
   }
-
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    setSwerveModuleStates(desiredStates,false);
+//    SwerveDriveKinematics.desaturateWheelSpeeds(
+//            desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+//
+//    m_swerveModules.get(ModulePosition.FRONT_LEFT).setDesiredState(desiredStates[0]);
+//    m_swerveModules.get(ModulePosition.FRONT_RIGHT).setDesiredState(desiredStates[1]);
+//    m_swerveModules.get(ModulePosition.BACK_LEFT).setDesiredState(desiredStates[2]);
+//    m_swerveModules.get(ModulePosition.BACK_RIGHT).setDesiredState(desiredStates[3]);
+  }
   public void resetModuleEncoders() {
     for (SwerveModuleSparkMax module : ModuleMap.orderedValuesList(m_swerveModules))
       module.resetAngleToAbsolute();
@@ -404,4 +449,135 @@ public class DriveSubsystem extends SubsystemBase {
     return 180 * throttleValue;
   }
 
+  public void setX() {
+    m_swerveModules.get(ModulePosition.FRONT_LEFT).setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    m_swerveModules.get(ModulePosition.FRONT_RIGHT).setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    m_swerveModules.get(ModulePosition.BACK_LEFT).setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    m_swerveModules.get(ModulePosition.BACK_RIGHT).setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+  }
+
+
+  //Charge Station Autos
+  public void driveToLevel(){
+    double pidOut = MathUtil.clamp(m_pitchPidController.calculate(
+            m_gyro.getRoll(), 0), -DriveConstants.kAutoLevelMaxOutput, DriveConstants.kAutoLevelMaxOutput);
+    drive( pidOut, 0, 0, false);
+
+    if (++count %10 == 0) {
+      System.out.println("Roll is :" + m_gyro.getRoll());
+      System.out.println("Pitch is :" + m_gyro.getPitch());
+      System.out.println("PID Output is: " + pidOut);
+    }
+
+    SmartDashboard.putNumber("DrivePidOutput",pidOut);
+  }
+
+  public boolean isLevel(){
+    return Math.abs(m_gyro.getRoll()) < Constants.AutoConstants.kLevelTolerance;
+  }
+
+  public boolean driveToAngle (double targetAngle){
+    boolean atAngle = true;
+    double currentAngle = m_gyro.getRoll();
+    // double currentAngle = m_odometry.;
+    if ( currentAngle >= targetAngle) {
+      drive( .25, 0, 0, false);  // xSpeed .4
+      atAngle = false;
+      if (++count %10 == 0) {
+        System.out.println("Angle is:" + currentAngle);
+      }
+    }
+    else {
+      drive( 0, 0, 0, true);
+    }
+    return atAngle;
+  }
+
+
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+              // Reset odometry for the first path you run during auto
+              if(isFirstPath){
+                PathPlannerTrajectory transformed = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+                this.resetOdometry(transformed.getInitialHolonomicPose());
+              }
+            }),
+            new PPSwerveControllerCommand(
+                    traj,
+                    this::getPoseMeters, // Pose supplier
+                    Constants.DriveConstants.kSwerveKinematics, // SwerveDriveKinematics
+                    new PIDController(Constants.PathConstants.kpXdefault, PathConstants.kiXdefault, PathConstants.kdXdefault), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                    new PIDController(PathConstants.kpYdefault, PathConstants.kiYdefault, PathConstants.kdYdefault), // Strafe Y controller (usually the same values as X controller)
+                    new PIDController(PathConstants.kpRdefault, PathConstants.kiRdefault, PathConstants.kdRdefault), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                    this::setModuleStates, // Module states consumer
+                    true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                    this // Requires this drive subsystem
+
+                    //TODO: 1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
+            )
+    );
+  }
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath, boolean isModifiedPID) {
+    if (!isModifiedPID){
+      m_kpX = PathConstants.kpXdefault;
+      m_kiX = PathConstants.kiXdefault;
+      m_kdX = PathConstants.kdXdefault;
+
+      m_kpY = PathConstants.kpYdefault;
+      m_kiY = PathConstants.kiYdefault;
+      m_kdY = PathConstants.kdYdefault;
+
+      m_kpR = PathConstants.kpRdefault;
+      m_kiR = PathConstants.kiRdefault;
+      m_kdR = PathConstants.kdRdefault;
+    }
+    return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+              // Reset odometry for the first path you run during auto
+              if(isFirstPath){
+                PathPlannerTrajectory transformed = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+                this.resetOdometry(transformed.getInitialHolonomicPose());
+              }
+            }),
+            new PPSwerveControllerCommand(
+                    traj,
+                    this::getPoseMeters, // Pose supplier
+                    Constants.DriveConstants.kSwerveKinematics, // SwerveDriveKinematics
+                    new PIDController(m_kpX, m_kiX, m_kdX), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                    new PIDController(m_kpY, m_kiY, m_kdY), // Strafe Y controller (usually the same values as X controller)
+                    new PIDController(m_kpR, m_kiR, m_kdR), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                    this::setModuleStates, // Module states consumer
+                    true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                    this // Requires this drive subsystem
+            )
+    );
+  }
+
+
+  public void setTrajPID(
+          double kpX, double kiX, double kdX,
+          double kpY, double kiY, double kdY,
+          double kpR, double kiR, double kdR
+  ){
+    m_kpX = kpX;  m_kpY = kpY;  m_kpR = kpR;
+    m_kiX = kiX;  m_kiY = kiY;  m_kiR = kiR;
+    m_kdX = kdX;  m_kdY = kdY;  m_kdR = kdR;
+  }
+
+  public void setXTrajPID(double kp, double ki, double kd){
+    m_kpX = kp;
+    m_kiX = ki;
+    m_kdX = kd;
+  }
+  public void setYTrajPID(double kp, double ki, double kd){
+    m_kpY = kp;
+    m_kiY = ki;
+    m_kdY = kd;
+  }
+  public void setRotTrajPID(double kp, double ki, double kd){
+    m_kpR = kp;
+    m_kiR = ki;
+    m_kdR = kd;
+  }
 }
