@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CanConstants;
@@ -456,7 +457,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_swerveModules.get(ModulePosition.BACK_RIGHT).setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
-
+  public Command DriveCommand(double speed){
+    return new StartEndCommand(
+      () -> drive( speed,0,0,false), 
+      () -> drive( 0,0,0,false),
+      this);
+  }
   //Charge Station Autos
   public void driveToLevel(){
     double pidOut = MathUtil.clamp(m_pitchPidController.calculate(
