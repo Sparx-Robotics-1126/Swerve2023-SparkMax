@@ -147,4 +147,7 @@ public class RobotContainer {
     return m_autoChooser.getSelected();
   }
 
+  public void displayShuffleboard() {
+    PigeonSubsystem.getInstance().outputValues();
+  }
 }

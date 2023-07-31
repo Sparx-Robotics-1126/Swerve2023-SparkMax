@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
+m_robotContainer.displayShuffleboard();
     m_robotContainer.m_fieldSim.periodic();
 
     m_robotContainer.periodic();
