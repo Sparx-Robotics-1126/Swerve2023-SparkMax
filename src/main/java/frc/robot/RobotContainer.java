@@ -22,7 +22,8 @@ import frc.robot.Constants.OIConstants;
 // import frc.robot.commands.auto.FiveBallAuto;
 import frc.robot.commands.LED.CANdleConfigCommands;
 import frc.robot.commands.LED.CANdlePrintCommands;
-import frc.robot.commands.auto.DriveToAngle;
+import frc.robot.commands.PathPlanner.LeaveBalance;
+//import frc.robot.commands.auto.DriveToAngle;
 import frc.robot.commands.swerve.SetSwerveDrive;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.DriveSubsystem;
@@ -112,9 +113,11 @@ public class RobotContainer {
 
 
     m_autoChooser.addOption("Do Nothing", new WaitCommand(0));
+
+    m_autoChooser.addOption("SCORE LEAVE BALANCE", new LeaveBalance( m_robotDrive));
     // m_autoChooser.setDefaultOption("Drive Forward Time",   m_robotDrive.DriveCommand(0.2).withTimeout(1.5));
     // m_autoChooser.setDefaultOption("Drive Forward Time",   m_robotDrive.followTrajectoryCommand(m_testPath, true, true));
-    m_autoChooser.setDefaultOption("angle",  new DriveToAngle(m_robotDrive));
+
     //  m_autoChooser.addOption("Drive Forward", new DriveForward(m_robotDrive));
     // m_autoChooser.addOption("5 Ball Auto", new FiveBallAuto(m_robotDrive));
 

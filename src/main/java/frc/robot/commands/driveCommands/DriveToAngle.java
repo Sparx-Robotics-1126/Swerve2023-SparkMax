@@ -1,9 +1,8 @@
-package frc.robot.commands.auto;
+package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-// import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveToAngle extends CommandBase {
