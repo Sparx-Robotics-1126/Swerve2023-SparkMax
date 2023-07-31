@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,6 +22,7 @@ import frc.robot.Constants.OIConstants;
 // import frc.robot.commands.auto.FiveBallAuto;
 import frc.robot.commands.LED.CANdleConfigCommands;
 import frc.robot.commands.LED.CANdlePrintCommands;
+import frc.robot.commands.auto.DriveToAngle;
 import frc.robot.commands.swerve.SetSwerveDrive;
 import frc.robot.simulation.FieldSim;
 import frc.robot.subsystems.DriveSubsystem;
@@ -43,7 +48,7 @@ public class RobotContainer {
   private final XboxController m_driveController = new XboxController(OIConstants.kDriverControllerPort);
   private final XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 
-  private final LEDSubsystem m_candleSubsystem = new LEDSubsystem(m_operatorController);
+  // private final LEDSubsystem m_candleSubsystem = new LEDSubsystem(m_operatorController);
   static Joystick leftJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
 //  private XboxController m_coDriverController = new XboxController(OIConstants.kOperatorControllerPort);
@@ -71,9 +76,9 @@ public class RobotContainer {
                     () -> m_driveController.getLeftX(),
                     () -> m_driveController.getRightX()));
 
-    if(m_candleSubsystem != null) {
-      configureOperatorButtonBindings();
-    }
+    // if(m_candleSubsystem != null) {
+    //   configureOperatorButtonBindings();
+    // }
 //        m_robotDrive.setDefaultCommand(
 //        new SetSwerveDrive(
 //            m_robotDrive,
@@ -85,24 +90,32 @@ public class RobotContainer {
 
 
   private void configureOperatorButtonBindings() {
-    new JoystickButton(m_operatorController, Constants.LEDConstants.BlockButton).whenPressed(m_candleSubsystem::setColors, m_candleSubsystem);
-    new JoystickButton(m_operatorController, Constants.LEDConstants.IncrementAnimButton).whenPressed(m_candleSubsystem::incrementAnimation, m_candleSubsystem);
-    new JoystickButton(m_operatorController, Constants.LEDConstants.DecrementAnimButton).whenPressed(m_candleSubsystem::decrementAnimation, m_candleSubsystem);
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.BlockButton).whenPressed(m_candleSubsystem::setColors, m_candleSubsystem);
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.IncrementAnimButton).whenPressed(m_candleSubsystem::incrementAnimation, m_candleSubsystem);
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.DecrementAnimButton).whenPressed(m_candleSubsystem::decrementAnimation, m_candleSubsystem);
 
-    new POVButton(m_operatorController, Constants.LEDConstants.MaxBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 1.0));
-    new POVButton(m_operatorController, Constants.LEDConstants.MidBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0.3));
-    new POVButton(m_operatorController, Constants.LEDConstants.ZeroBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0));
+    // new POVButton(m_operatorController, Constants.LEDConstants.MaxBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 1.0));
+    // new POVButton(m_operatorController, Constants.LEDConstants.MidBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0.3));
+    // new POVButton(m_operatorController, Constants.LEDConstants.ZeroBrightnessAngle).whenPressed(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0));
 
-    new JoystickButton(m_operatorController, Constants.LEDConstants.VbatButton).whenPressed(new CANdlePrintCommands.PrintVBat(m_candleSubsystem));
-    new JoystickButton(m_operatorController, Constants.LEDConstants.V5Button).whenPressed(new CANdlePrintCommands.Print5V(m_candleSubsystem));
-    new JoystickButton(m_operatorController, Constants.LEDConstants.CurrentButton).whenPressed(new CANdlePrintCommands.PrintCurrent(m_candleSubsystem));
-    new JoystickButton(m_operatorController, Constants.LEDConstants.TemperatureButton).whenPressed(new CANdlePrintCommands.PrintTemperature(m_candleSubsystem));
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.VbatButton).whenPressed(new CANdlePrintCommands.PrintVBat(m_candleSubsystem));
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.V5Button).whenPressed(new CANdlePrintCommands.Print5V(m_candleSubsystem));
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.CurrentButton).whenPressed(new CANdlePrintCommands.PrintCurrent(m_candleSubsystem));
+    // new JoystickButton(m_operatorController, Constants.LEDConstants.TemperatureButton).whenPressed(new CANdlePrintCommands.PrintTemperature(m_candleSubsystem));
   }
 
 
   private void initializeAutoChooser() {
-    m_autoChooser.setDefaultOption("Do Nothing", new WaitCommand(0));
-    // m_autoChooser.addOption("Drive Forward", new DriveForward(m_robotDrive));
+
+    PathPlannerTrajectory m_testPath = PathPlanner.loadPath("Drive Foward 5", 
+    new PathConstraints(5.5, 5.5));
+
+
+    m_autoChooser.addOption("Do Nothing", new WaitCommand(0));
+    // m_autoChooser.setDefaultOption("Drive Forward Time",   m_robotDrive.DriveCommand(0.2).withTimeout(1.5));
+    // m_autoChooser.setDefaultOption("Drive Forward Time",   m_robotDrive.followTrajectoryCommand(m_testPath, true, true));
+    m_autoChooser.setDefaultOption("angle",  new DriveToAngle(m_robotDrive));
+    //  m_autoChooser.addOption("Drive Forward", new DriveForward(m_robotDrive));
     // m_autoChooser.addOption("5 Ball Auto", new FiveBallAuto(m_robotDrive));
 
     SmartDashboard.putData("Auto Selector", m_autoChooser);

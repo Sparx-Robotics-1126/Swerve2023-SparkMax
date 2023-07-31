@@ -159,7 +159,7 @@ public final class Constants {
     public static final double kvVoltSecondsPerMeter = 0.8;
     public static final double kaVoltSecondsSquaredPerMeter = 0.15;
 
-    public static final double kMaxSpeedMetersPerSecond = 2; // 2
+    public static final double kMaxSpeedMetersPerSecond = 5; // 2
 
     public static final double kMaxRotationRadiansPerSecond = Math.PI;
     public static final double kMaxRotationRadiansPerSecondSquared = Math.PI;

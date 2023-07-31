@@ -24,6 +24,17 @@
 //         swerveDrive.getThetaPidController(),
 //         swerveDrive::setSwerveModuleStatesAuto,
 //         swerveDrive);
+
+// var blah = new PPSwerveControllerCommand(trajectory, 
+// swerveDrive::getPoseMeters,
+// DriveConstants.kSwerveKinematics,
+//   swerveDrive.getXPidController(),
+//   swerveDrive.getYPidController(),
+//   swerveDrive.get,
+//    null,
+//     null,
+//      null)
+
 //     addCommands(
 //         new SetSwerveOdometry(swerveDrive, trajectory.getInitialPose()),
 //         command,
