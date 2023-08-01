@@ -233,6 +233,7 @@ public class PigeonSubsystem extends SubsystemBase {
 
     public void outputValues() {
         SmartDashboard.putNumber("PIGEON_PITCH", getPitch());
+        SmartDashboard.putNumber("PIGEON_ROLL", getRoll());
         SmartDashboard.putNumber("PIGEON_TEMP", getTemp());
         SmartDashboard.putNumber("PIGEON_ANGLE", getAngle());
         SmartDashboard.putNumber("PIGEON_RATE", getRate());

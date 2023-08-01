@@ -61,8 +61,8 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Preferences.removeAll();
-    Pref.deleteUnused();
-    Pref.addMissing();
+    // Pref.deleteUnused();
+    // Pref.addMissing();
     m_pigeon = PigeonSubsystem.getInstance();
     SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
     // Configure the button bindings

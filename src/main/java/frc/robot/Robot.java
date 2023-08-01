@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.PigeonSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,9 +37,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    if (RobotBase.isReal())
+    // if (RobotBase.isReal())
     
-      DataLogManager.start();
+    //   DataLogManager.start();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
@@ -68,12 +69,13 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-m_robotContainer.displayShuffleboard();
-    m_robotContainer.m_fieldSim.periodic();
+    PigeonSubsystem.getInstance().outputValues();
+// m_robotContainer.displayShuffleboard();
+//     m_robotContainer.m_fieldSim.periodic();
 
-    m_robotContainer.periodic();
+//     m_robotContainer.periodic();
 
-    m_robotContainer.m_robotDrive.throttleValue = m_robotContainer.getThrottle();
+//     m_robotContainer.m_robotDrive.throttleValue = m_robotContainer.getThrottle();
    
   }
 
